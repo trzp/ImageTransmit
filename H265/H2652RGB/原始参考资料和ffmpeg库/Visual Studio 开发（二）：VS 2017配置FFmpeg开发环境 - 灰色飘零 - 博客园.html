@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="zh-cn"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="origin">
+    <meta property="og:description" content="在上篇文章Visual Studio 开发（一）：安装配置Visual Studio Code 中，我们讲了一下如何配置VS CODE，来编写和调试C的代码。如果你已经使用VS Code回顾和复习好C">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>Visual Studio 开发（二）：VS 2017配置FFmpeg开发环境 - 灰色飘零 - 博客园</title>
+    
+    <link rel="stylesheet" href="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/blog-common.css">
+    <link id="MainCss" rel="stylesheet" href="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/bundle-thinkinside.css">
+    
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/bundle-thinkinside-mobile.css">
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/renhui/rss">
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/renhui/rsd.xml">
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/renhui/wlwmanifest.xml">
+    <script src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/amp4ads-host-v0.js"></script><script src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/pubads_impl_rendering_2019103101.js"></script><script async="" src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/analytics.js"></script><script type="text/javascript" src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/encoder.js"></script><script src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/jquery-2.js"></script>
+    <script src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/blog-common.js"></script>
+    <script>
+        var currentBlogId = 201529;
+        var currentBlogApp = 'renhui';
+        var cb_enable_mathjax = false;
+        var isLogined = false;
+    </script>
+    
+    
+    
+<link rel="preload" href="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/integrator.js" as="script"><script type="text/javascript" src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/integrator.js"></script><script src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/pubads_impl_2019103101.js" async=""></script></head>
+<body>
+    <a name="top"></a>
+    
+    
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+        <a id="lnkBlogLogo" href="https://www.cnblogs.com/renhui/"><img id="blogLogo" src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/logo.gif" alt="返回主页"></a>		
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle" href="https://www.cnblogs.com/renhui/">灰色飘零</a>
+</h1>
+<h2>
+长风破浪会有时，直挂云帆济沧海
+</h2>
+
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li><a id="blog_nav_sitehome" class="menu" href="https://www.cnblogs.com/">
+博客园</a>
+</li>
+<li>
+<a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/renhui/">
+首页</a>
+</li>
+<li>
+
+
+</li>
+<li>
+<a id="blog_nav_contact" class="menu" href="https://msg.cnblogs.com/send/%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6">
+联系</a></li>
+<li>
+
+<!--<partial name="./Shared/_XmlLink.cshtml" model="Model" /></li>--></li>
+<li>
+<a id="blog_nav_admin" class="menu" href="https://i.cnblogs.com/">
+管理</a>
+</li>
+</ul>
+
+
+		<div class="blogStats">
+			
+			<span id="stats_post_count">随笔 - 
+292&nbsp; </span>
+<span id="stats_article_count">文章 - 
+0&nbsp; </span>
+<span id="stats-comment_count">评论 - 
+70</span>
+
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		<div id="post_detail">
+    <!--done-->
+    <div id="topics">
+        <div class="post">
+            <h1 class="postTitle">
+                
+<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/renhui/p/10387764.html">Visual Studio 开发（二）：VS 2017配置FFmpeg开发环境</a>
+
+            </h1>
+            <div class="clear"></div>
+            <div class="postBody">
+                
+<div id="cnblogs_post_body" class="blogpost-body ">
+    <p><span class="postTitle2">在上篇文章</span><a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="https://www.cnblogs.com/renhui/p/10387228.html">Visual Studio 开发（一）：安装配置Visual Studio Code</a><span class="postTitle2"> 中，我们讲了一下如何配置VS CODE，来编写和调试C的代码。如果你已经使用VS Code回顾和复习好C相关的知识了，并且有想深入学习FFmpeg的方法，那么可以看看这篇文章，相信对你会很有帮助。</span></p>
+<h1><span class="postTitle2">一、下载安装Visual Studio</span></h1>
+<p>&nbsp;下载地址为：<a href="https://visualstudio.microsoft.com/zh-hans/downloads/" target="_blank">https://visualstudio.microsoft.com/zh-hans/downloads/</a></p>
+<p><span class="postTitle2"><img src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/682616-20190216141424095-278800853.png" alt="" width="600"></span></p>
+<p>然后进行安装，安装时选择C/C++开发的选项进行安装，安装时选择如下：</p>
+<p><img src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/682616-20190216141819723-1935837215.png" alt="" width="600"></p>
+<p><img src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/682616-20190216141749750-1262052164.png" alt="" width="600"></p>
+<p>&nbsp;选好就，点击下一步，等待安装就OK了。</p>
+<h1>&nbsp;二、创建项目并配置FFmpeg开发环境</h1>
+<p>在文件中新建一个项目，自行起一个项目名称，例如FFmpegTest，下面是我创建项目的目录结构：</p>
+<p><img src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/682616-20190216142136245-368778768.png" alt="" width="450"></p>
+<p>里面的代码是一个Hello World的代码，并说明了如何运行起来这个项目（针对新手）。</p>
+<p>尝试运行一下，如果运行没问题，那么我们的Visual Studio 2017 就说明安装的没问题了，下面开始配置FFmpeg的开发环境了。</p>
+<h3>1. 下载FFmpeg的源码、库、链接文件</h3>
+<p>首先需要去FFmpeg官网下载相应的内容：</p>
+<p>下载地址为：<a href="https://ffmpeg.zeranoe.com/builds/" target="_blank">https://ffmpeg.zeranoe.com/builds/</a>，这里有三种类型的：static、shared、dev。</p>
+<p>先解释一下这三种类型的用处：</p>
+<ul>
+<li>static：打包好的文件，可以认为是FFmpeg的release版本，提供的是ffmpeg、ffplay、ffprobe三个命令行工具。(只学习命令行的同学可以将此配置到环境变量上)</li>
+<li>shared：这个包包含static的文件，但是相比较多了链接文件DLL，这些DLL文件在后面开发环境配置配置中会用到。</li>
+<li>dev：这个是纯开发版本的文件，不包含ffmpeg、ffplay、ffprobe这些命令行工具，但是包含我们开发时使用的头文件(位于include目录)，及liib文件(位于lib目录)，以及example文件（用于学习和使用）。</li>
+</ul>
+<p>从上面的类型说明中，可以知道，我们需要下载的是shared和dev两个文件，<strong>为了减少使用时的问题，建议下载32位的文件</strong>。</p>
+<p>附：本人以及将下载好的上传到：<a href="https://github.com/renhui/Thinking-in-AV/tree/master/FFmpeg/environment" target="_blank">https://github.com/renhui/Thinking-in-AV/tree/master/FFmpeg/environment </a>方便浏览和查阅。</p>
+<p>然后将这些文件拷贝到项目中，具体如下：</p>
+<ol>
+<li>将shared的DLL文件拷贝到项目中。</li>
+<li>将dev的include和lib文件夹一起拷贝到目录中。</li>
+</ol>
+<h3>2. 配置FFmpeg开发环境</h3>
+<p>添加附加包含目录指向拷贝的include文件，如下：</p>
+<p><img src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/682616-20190216144857720-138025945.png" alt="" width="700"></p>
+<p>添加附加库目录，如下：</p>
+<p><img src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/682616-20190216144957261-1629003144.png" alt="" width="700"></p>
+<p>&nbsp;添加附加依赖项，内容为</p>
+<div class="cnblogs_code">
+<pre>avcodec.lib; avformat.lib; avutil.lib; avdevice.lib; avfilter.lib;postproc.lib;swresample.lib; swscale.lib</pre>
+</div>
+<p>添加后界面如下：</p>
+<p><img src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/682616-20190216145241981-924193256.png" alt="" width="700"></p>
+<p>至此，FFmpeg的开发环境配置完毕了。</p>
+<h3>3.验证FFmpeg开发环境</h3>
+<p>如何验证FFmpeg能正常使用了，这个简单，运行一段FFmpeg的代码即可。</p>
+<p>例如：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>#include <span style="color: #800000;">"</span><span style="color: #800000;">pch.h</span><span style="color: #800000;">"</span><span style="color: #000000;">
+#include </span>&lt;iostream&gt;
+
+<span style="color: #0000ff;">extern</span> <span style="color: #800000;">"</span><span style="color: #800000;">C</span><span style="color: #800000;">"</span><span style="color: #000000;">{
+#include </span><span style="color: #800000;">"</span><span style="color: #800000;">libavcodec/avcodec.h</span><span style="color: #800000;">"</span><span style="color: #000000;">
+#include </span><span style="color: #800000;">"</span><span style="color: #800000;">libavformat/avformat.h</span><span style="color: #800000;">"</span><span style="color: #000000;">
+}
+
+</span><span style="color: #0000ff;">int</span> main(<span style="color: #0000ff;">int</span> argc, <span style="color: #0000ff;">char</span>*<span style="color: #000000;"> argv[]) {
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, avcodec_configuration());
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>如果编译运行不报错，且输出如下的界面，则说明FFmpeg设置成功了:</p>
+<p><img src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/682616-20190216145849656-1485231153.png" alt="" width="600"></p>
+<p>FFmpeg学习的环境问题没有了，后续就可以可以自行学习和发挥了。海阔凭鱼跃，天高任鸟飞！</p>
+<h3>4.&nbsp; 补充</h3>
+<p>如果在运行代码的时候，IDE提示，***声明已被否决，这时可以通过以下几种方式来解决：</p>
+<p>1. 修改项目的配置</p>
+<p>Project&nbsp;Properties&nbsp;&gt;&nbsp;Configuration&nbsp;Properties&nbsp;&gt;&nbsp;C/C++&nbsp;&gt;&nbsp;General&nbsp;&gt;&nbsp;SDL&nbsp;checks
+关掉</p>
+<p>2. 代码中添加编译参数信息</p>
+<p>#pragma&nbsp;warning(disable:&nbsp;4996)&nbsp; &nbsp;&nbsp;</p>
+<p>&nbsp;</p>
+</div>
+<div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block"><div id="BlogPostCategory">
+    分类: 
+            <a href="https://www.cnblogs.com/renhui/category/1399627.html" target="_blank">Visual Studio</a>,             <a href="https://www.cnblogs.com/renhui/category/1165051.html" target="_blank">FFmpeg</a></div>
+
+
+    <div id="blog_post_info">
+<div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(10387764,cb_blogId,1);green_channel_success(this,'谢谢推荐！');">好文要顶</a>
+        <a id="green_channel_follow" onclick="follow('a7fe1333-ca55-e411-b908-9dcfd8948a71');" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/renhui/" target="_blank"><img src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/20190711094625.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/renhui/">灰色飘零</a><br>
+            <a href="https://home.cnblogs.com/u/renhui/followees/">关注 - 40</a><br>
+            <a href="https://home.cnblogs.com/u/renhui/followers/">粉丝 - 215</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow('a7fe1333-ca55-e411-b908-9dcfd8948a71');return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(10387764,'Digg')">
+        <span class="diggnum" id="digg_count">2</span>
+    </div>
+    <div class="buryit" onclick="votePost(10387764,'Bury')">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+
+<script type="text/javascript">
+    currentDiggType = 0;
+</script></div>
+    <div class="clear"></div>
+    <div id="post_next_prev">
+
+    <a href="https://www.cnblogs.com/renhui/p/10387228.html" class="p_n_p_prefix">« </a> 上一篇：    <a href="https://www.cnblogs.com/renhui/p/10387228.html" title="发布于 2019-02-16 11:54">Visual Studio 开发（一）：安装配置Visual Studio Code</a>
+    <br>
+    <a href="https://www.cnblogs.com/renhui/p/10388199.html" class="p_n_p_prefix">» </a> 下一篇：    <a href="https://www.cnblogs.com/renhui/p/10388199.html" title="发布于 2019-02-16 23:10">FFmpeg开发实战（一）：FFmpeg 打印日志</a>
+
+</div>
+</div>
+            </div>
+            <div class="postDesc">posted @ 
+<span id="post-date">2019-02-16 15:00</span>&nbsp;<a href="https://www.cnblogs.com/renhui/">灰色飘零</a> 阅读(<span id="post_view_count">1868</span>) 评论(<span id="post_comment_count">0</span>) <a href="https://i.cnblogs.com/EditPosts.aspx?postid=10387764" rel="nofollow"> 编辑</a> <a href="javascript:void(0)" onclick="AddToWz(10387764); return false;">收藏</a>
+</div>
+        </div>
+	    
+	    
+    </div><!--end: topics 文章、评论容器-->
+</div>
+<script src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/highlight.js"></script>
+<script>markdown_highlight();</script>
+<script>
+    var allowComments = true, cb_blogId = 201529, cb_blogApp = 'renhui', cb_blogUserGuid = 'a7fe1333-ca55-e411-b908-9dcfd8948a71';
+    var cb_entryId = 10387764, cb_entryCreatedDate = '2019-02-16 15:00', cb_postType = 1; 
+    loadViewCount(cb_entryId);
+</script><a name="!comments"></a>
+<div id="blog-comments-placeholder"></div>
+<script>
+    var commentManager = new blogCommentManager();
+    commentManager.renderComments(0);
+</script>
+
+<div id="comment_form" class="commentform">
+    <a name="commentform"></a>
+    <div id="divCommentShow"></div>
+    <div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="#" onclick="return RefreshPage();">刷新页面</a><a href="#top">返回顶部</a></div>
+    <div id="comment_form_container"><div class="login_tips">
+    注册用户登录后才能发表评论，请 
+    <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login('commentform');">登录</a>
+     或 
+    <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，
+    <a href="https://www.cnblogs.com/">访问</a> 网站首页。
+</div></div>
+    <div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+    <div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank" onclick="ga('send', 'event', 'Link', 'click', 'T2-工控')">【推荐】超50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br><a href="https://www.jdcloud.com/cn/activity/year-end?utm_source=DMT_cnblogs&amp;utm_medium=CH&amp;utm_campaign=q4vm&amp;utm_term=Virtual-Machines" target="_blank" onclick="ga('send', 'event', 'Link', 'click', 'T2-京东云')">【活动】京东云服务器_云主机低于1折，低价高性能产品备战双11</a><br><a href="https://www.ctyun.cn/activity/#/201910/ecs?hmsr=%E7%9C%8B%E7%9C%8B-%E5%8D%9A%E5%AE%A2%E5%9B%AD-10.16-10%E6%9C%88%E7%89%B9%E6%83%A0&amp;hmpl=&amp;hmcu=&amp;hmkw=&amp;hmci=?track=|cp:cz_blog|tgdy:46861|ttjh:shouyedingbuyoucefenlan|key:czkk12|pf:pc" target="_blank" onclick="ga('send', 'event', 'Link', 'click', 'T2-天翼云')">【推荐】天翼云双十一提前开抢，1核1G云主机3个月仅需59元</a><br><a href="http://click.aliyun.com/m/1000081987/" target="_blank" onclick="ga('send', 'event', 'Link', 'click', 'T2-阿里云')">【推荐】阿里云双11冰点钜惠，热门产品低至一折等你来抢！</a><br><a href="https://www.getui.com/2019devfest?f=5&amp;p=10&amp;c=15&amp;ch=1&amp;hmsr=%E5%8D%9A%E5%AE%A2%E5%9B%AD&amp;hmpl=2019%E5%BC%80%E5%8F%91%E8%80%85%E8%8A%82&amp;hmcu=PC&amp;hmkw=&amp;hmci=" target="_blank">【福利】个推四大热门移动开发SDK全部免费用一年，限时抢！</a><br></div>
+    <div id="opt_under_post"></div>
+    <script async="async" src="Visual%20Studio%20%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9AVS%202017%E9%85%8D%E7%BD%AEFFmpeg%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%20-%20%E7%81%B0%E8%89%B2%E9%A3%98%E9%9B%B6%20-%20%E5%8D%9A%E5%AE%A2%E5%9B%AD_files/gpt.js"></script>
+    <script>
+        var googletag = googletag || {};
+        googletag.cmd = googletag.cmd || [];
+    </script>
+    <script>
+        googletag.cmd.push(function () {
+            googletag.defineSlot("/1090369/C1", [300, 250], "div-gpt-ad-1546353474406-0").addService(googletag.pubads());
+            googletag.defineSlot("/1090369/C2", [468, 60], "div-gpt-ad-1539008685004-0").addService(googletag.pubads());
+            googletag.pubads().enableSingleRequest();
+            googletag.enableServices();
+        });
+    </script>
+    <div id="cnblogs_c1" class="c_ad_block">
+        <div id="div-gpt-ad-1546353474406-0" style="height:250px; width:300px;" data-google-query-id="CPLc2-e91OUCFY6JlgodH1wMjA"><div id="google_ads_iframe_/1090369/C1_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/1090369/C1_0" title="3rd party ad content" name="google_ads_iframe_/1090369/C1_0" scrolling="no" marginwidth="0" marginheight="0" style="border: 0px none; vertical-align: bottom;" srcdoc="" data-google-container-id="1" data-load-complete="true" width="300" height="250" frameborder="0"></iframe></div></div>
+    </div>
+    <div id="under_post_news"><div class="recomm-block"><b>相关博文：</b><br>·  <a title="Windows FFMPEG开发环境配置" href="https://www.cnblogs.com/CoderTian/p/7351516.html" target="_blank" onclick="clickRecomItmem(7351516)">Windows FFMPEG开发环境配置</a><br>·  <a title="WindowsFFMPEG开发环境配置" href="https://www.cnblogs.com/lidabo/p/10398037.html" target="_blank" onclick="clickRecomItmem(10398037)">WindowsFFMPEG开发环境配置</a><br>·  <a title="vs2013+ffmpeg开发环境搭建" href="https://www.cnblogs.com/jukan/p/7047662.html" target="_blank" onclick="clickRecomItmem(7047662)">vs2013+ffmpeg开发环境搭建</a><br>·  <a title="VS2013FFmpeg开发环境配置" href="https://www.cnblogs.com/jiulonghudefeizhai/p/9746988.html" target="_blank" onclick="clickRecomItmem(9746988)">VS2013FFmpeg开发环境配置</a><br>·  <a title="Visual studio 通用开发环境配置：SDL,FFMPEG为例" href="https://www.cnblogs.com/laughingQing/p/5901743.html" target="_blank" onclick="clickRecomItmem(5901743)">Visual studio 通用开发环境配置：SDL,FFMPEG为例</a><br>»  <a target="_blank" href="https://recomm.cnblogs.com/blogpost/10387764">更多推荐...</a></div></div>
+    <div id="cnblogs_c2" class="c_ad_block">
+        <div id="div-gpt-ad-1539008685004-0" style="height:60px; width:468px;" data-google-query-id="CPPc2-e91OUCFY6JlgodH1wMjA">
+            
+        <div id="google_ads_iframe_/1090369/C2_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/1090369/C2_0" title="3rd party ad content" name="google_ads_iframe_/1090369/C2_0" scrolling="no" marginwidth="0" marginheight="0" style="border: 0px none; vertical-align: bottom;" srcdoc="" data-google-container-id="2" data-load-complete="true" width="468" height="60" frameborder="0"></iframe></div></div>
+    </div>
+    <div id="under_post_kb">
+<div class="itnews c_ad_block">
+    <b>最新 IT 新闻</b>:
+    <br>
+ ·              <a href="https://news.cnblogs.com/n/647160/" target="_blank">欧盟文件敦促发行公共数字货币 可能封杀Facebook加密货币</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/647158/" target="_blank">给黑洞拍照片不算什么，下一步要拍视频了</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/647159/" target="_blank">西数秀20TB机械硬盘：仍是SMR叠瓦式</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/647157/" target="_blank">黑洞可能是暗能量团？能解释黑洞合并的质量变化</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/647156/" target="_blank">Visual Studio 2019 for Mac&nbsp;8.4 Preview 2&nbsp;发布</a>
+            <br>
+    » <a href="https://news.cnblogs.com/" title="IT 新闻" target="_blank">更多新闻...</a>
+</div></div>
+    <div id="HistoryToday" class="c_ad_block">
+<b>历史上的今天：</b>
+<br>
+
+2019-02-16    <a href="https://www.cnblogs.com/renhui/p/10387228.html">Visual Studio 开发（一）：安装配置Visual Studio Code</a>
+    <br>
+</div>
+    <script type="text/javascript">
+        fixPostBody();
+        setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+        deliverAdT2();
+        deliverAdC1();
+        deliverAdC2();
+        loadNewsAndKb();
+        loadBlogSignature();
+LoadPostCategoriesTags(cb_blogId, cb_entryId);        LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+        GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+        loadOptUnderPost();
+        GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+    </script>
+</div>
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<div id="sidebar_news" class="newsItem"><!--done-->
+<h3 class="catListTitle">公告</h3>
+
+<div id="blog-news">
+    
+    <div id="profile_block">
+        昵称：
+        <a href="https://home.cnblogs.com/u/renhui/">
+            灰色飘零
+        </a>
+        <br>
+        园龄：
+        <a href="https://home.cnblogs.com/u/renhui/" title="入园时间：2014-10-17">
+            5年
+        </a>
+        <br>
+        粉丝：
+        <a href="https://home.cnblogs.com/u/renhui/followers/">
+            215
+        </a>
+        <br>
+        关注：
+        <a href="https://home.cnblogs.com/u/renhui/followees/">
+            40
+        </a>
+        <div id="p_b_follow">
+<a href="javascript:void(0)" onclick="follow('a7fe1333-ca55-e411-b908-9dcfd8948a71')">+加关注</a></div>
+        <script>getFollowStatus('a7fe1333-ca55-e411-b908-9dcfd8948a71');</script>
+    </div>
+</div>
+
+</div>
+
+			<div id="blog-calendar" style="">
+
+<table id="blogCalendar" class="Cal" title="Calendar" cellspacing="0" cellpadding="0" border="0">
+    <tbody>
+        <tr>
+            <td colspan="7">
+                <table class="CalTitle" cellspacing="0" border="0">
+                    <tbody>
+                        <tr>
+                            <td class="CalNextPrev">
+                                <a href="javascript:void(0);" onclick="loadBlogCalendar('2019/10/06'); return false;">&lt;</a>
+                            </td>
+                            <td align="center">2019年11月</td>
+                            <td class="CalNextPrev" align="right">
+                                <a href="javascript:void(0);" onclick="loadBlogCalendar('2019/12/06'); return false;">&gt;</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+                    <th class="CalDayHeader" abbr="日" scope="col" align="center">日</th>
+                    <th class="CalDayHeader" abbr="一" scope="col" align="center">一</th>
+                    <th class="CalDayHeader" abbr="二" scope="col" align="center">二</th>
+                    <th class="CalDayHeader" abbr="三" scope="col" align="center">三</th>
+                    <th class="CalDayHeader" abbr="四" scope="col" align="center">四</th>
+                    <th class="CalDayHeader" abbr="五" scope="col" align="center">五</th>
+                    <th class="CalDayHeader" abbr="六" scope="col" align="center">六</th>
+        </tr>
+            <tr>
+                            <td class="CalOtherMonthDay" align="center">27</td>
+                            <td class="CalOtherMonthDay" align="center">28</td>
+                            <td class="CalOtherMonthDay" align="center">29</td>
+                            <td class="CalOtherMonthDay" align="center">30</td>
+                            <td class="CalOtherMonthDay" align="center">31</td>
+                        <td class="" align="center">
+                            <a href="https://www.cnblogs.com/renhui/archive/2019/11/01.html"><u>1</u></a>
+                        </td>
+                    <td class="CalWeekendDay" align="center">
+                        2
+                    </td>
+            </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            3
+                        </td>
+                            <td class="" align="center">
+                                <a href="https://www.cnblogs.com/renhui/archive/2019/11/04.html"><u>4</u></a>
+                            </td>
+                            <td class="" align="center">
+                                5
+                            </td>
+                            <td class="CalTodayDay" align="center">
+                                6
+                            </td>
+                            <td class="" align="center">
+                                7
+                            </td>
+                            <td class="" align="center">
+                                8
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            9
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            10
+                        </td>
+                            <td class="" align="center">
+                                11
+                            </td>
+                            <td class="" align="center">
+                                12
+                            </td>
+                            <td class="" align="center">
+                                13
+                            </td>
+                            <td class="" align="center">
+                                14
+                            </td>
+                            <td class="" align="center">
+                                15
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            16
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            17
+                        </td>
+                            <td class="" align="center">
+                                18
+                            </td>
+                            <td class="" align="center">
+                                19
+                            </td>
+                            <td class="" align="center">
+                                20
+                            </td>
+                            <td class="" align="center">
+                                21
+                            </td>
+                            <td class="" align="center">
+                                22
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            23
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            24
+                        </td>
+                            <td class="" align="center">
+                                25
+                            </td>
+                            <td class="" align="center">
+                                26
+                            </td>
+                            <td class="" align="center">
+                                27
+                            </td>
+                            <td class="" align="center">
+                                28
+                            </td>
+                            <td class="" align="center">
+                                29
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            30
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalOtherMonthDay" align="center">
+                            1
+                        </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                2
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                3
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                4
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                5
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                6
+                            </td>
+                        <td class="CalOtherMonthDay" align="center">
+                            7
+                        </td>
+                </tr>
+    </tbody>
+</table></div><script>loadBlogDefaultCalendar();</script>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn">
+<!-- 搜索 -->
+<div id="sidebar_search" class="sidebar-block">
+    <div id="sidebar_search" class="mySearch">
+        <h3 class="catListTitle">搜索</h3>
+        <div id="sidebar_search_box">
+            <div id="widget_my_zzk" class="div_my_zzk">
+                <input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk">
+            </div>
+            <div id="widget_my_google" class="div_my_zzk">
+                <input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 常用链接 -->
+
+
+<!-- 最新随笔 -->
+
+
+
+<!-- 我的标签 -->
+
+
+<!-- 积分与排名 -->
+<div id="sidebar_scorerank" class="sidebar-block">
+    <div class="catListBlogRank">
+<h3 class="catListTitle">积分与排名</h3>
+<ul>
+	<li class="liScore">
+		积分 -	
+360792
+	</li>
+	<li class="liRank">
+		排名 -	
+793
+	</li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+<!-- 随笔分类、随笔档案、文章分类、新闻分类、相册、链接 -->
+<div id="sidebar_categories">
+    
+        <div id="sidebar_postcategory" class="catListPostCategory sidebar-block">
+            <h3 class="catListTitle">
+                
+
+随笔分类
+<span style="font-size:11px;font-weight:normal">(305)</span>
+
+
+            </h3>
+
+
+            <ul>
+
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1320495.html" rel="" target="">
+    Android 9.0/P 版本(3)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1183720.html" rel="" target="">
+    Android Activity(7)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1436184.html" rel="" target="">
+    Android Gradle(7)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1468058.html" rel="" target="">
+    Android MediaPlayer(2)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/919149.html" rel="" target="">
+    Android Service(2)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1247770.html" rel="" target="">
+    Android Studio(5)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1141772.html" rel="" target="">
+    Android TV(2)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1064697.html" rel="" target="">
+    Android View(8)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/943340.html" rel="" target="">
+    Android WebRTC (6)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/885937.html" rel="" target="">
+    Android WebView(13)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/853628.html" rel="" target="">
+    Android Widget(9)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1247815.html" rel="" target="">
+    Android 播放器(4)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/965911.html" rel="" target="">
+    Android 打包发布(4)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/881515.html" rel="" target="">
+    Android 经验之谈(21)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1007929.html" rel="" target="">
+    Android 框架式编程(12)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1485668.html" rel="" target="">
+    Android 内存管理(5)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/920655.html" rel="" target="">
+    Android 数据交互(6)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1529006.html" rel="" target="">
+    Android 数据库(2)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1480305.html" rel="" target="">
+    Android 项目优化(6)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1130594.html" rel="" target="">
+    Android 异常处理(6)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1011048.html" rel="" target="">
+    Android 音视频技术(12)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1329225.html" rel="" target="">
+    C/C++(4)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1165051.html" rel="" target="">
+    FFmpeg(19)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1399798.html" rel="" target="">
+    FFmpeg 开发实战(6)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1392920.html" rel="" target="">
+    FFmpeg 命令行(5)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1303206.html" rel="" target="">
+    ijkplayer(6)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1469676.html" rel="" target="">
+    Java CV(2)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/909566.html" rel="" target="">
+    Java 多线程(8)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/888021.html" rel="" target="">
+    Java 筑基(8)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1413556.html" rel="" target="">
+    JNI 实战(4)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1329373.html" rel="" target="">
+    JNI 学习(11)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1011441.html" rel="" target="">
+    NDK(7)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/944595.html" rel="" target="">
+    NetWork(11)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1321279.html" rel="" target="">
+    OkHttp(3)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1127176.html" rel="" target="">
+    OpenGL(12)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1303955.html" rel="" target="">
+    OpenProject(2)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1292790.html" rel="" target="">
+    OpenSL(5)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1303354.html" rel="" target="">
+    RichText(4)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1407497.html" rel="" target="">
+    SDL(8)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1399627.html" rel="" target="">
+    Visual Studio(3)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1393420.html" rel="" target="">
+    多媒体文件格式(4)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/899281.html" rel="" target="">
+    开发环境配置(4)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1396886.html" rel="" target="">
+    流媒体协议(3)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1475316.html" rel="" target="">
+    软件开发基础(5)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/910038.html" rel="" target="">
+    设计模式(3)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/947144.html" rel="" target="">
+    视频直播技术(5)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1302473.html" rel="" target="">
+    数据结构&amp;算法(2)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1295150.html" rel="" target="">
+    学习思路(4)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/category/1168689.html" rel="" target="">
+    音视频编解码(5)
+</a>
+ 
+
+                        </li>
+
+            </ul>
+
+
+        </div>
+        <div id="sidebar_postarchive" class="catListPostArchive sidebar-block">
+            <h3 class="catListTitle">
+                
+
+随笔档案
+<span style="font-size:11px;font-weight:normal">(292)</span>
+
+
+            </h3>
+
+
+            <ul>
+
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2019/11.html" rel="" target="">
+    2019年11月(2)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2019/10.html" rel="" target="">
+    2019年10月(4)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2019/09.html" rel="" target="">
+    2019年9月(1)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2019/08.html" rel="" target="">
+    2019年8月(4)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2019/07.html" rel="" target="">
+    2019年7月(5)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2019/06.html" rel="" target="">
+    2019年6月(10)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2019/05.html" rel="" target="">
+    2019年5月(10)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2019/04.html" rel="" target="">
+    2019年4月(6)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2019/03.html" rel="" target="">
+    2019年3月(12)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2019/02.html" rel="" target="">
+    2019年2月(15)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2019/01.html" rel="" target="">
+    2019年1月(4)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2018/12.html" rel="" target="">
+    2018年12月(5)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2018/11.html" rel="" target="">
+    2018年11月(15)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2018/10.html" rel="" target="">
+    2018年10月(13)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2018/09.html" rel="" target="">
+    2018年9月(5)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2018/08.html" rel="" target="">
+    2018年8月(16)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2018/07.html" rel="" target="">
+    2018年7月(13)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2018/06.html" rel="" target="">
+    2018年6月(10)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2018/05.html" rel="" target="">
+    2018年5月(3)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2018/04.html" rel="" target="">
+    2018年4月(2)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2018/03.html" rel="" target="">
+    2018年3月(10)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2018/02.html" rel="" target="">
+    2018年2月(6)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2018/01.html" rel="" target="">
+    2018年1月(6)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2017/12.html" rel="" target="">
+    2017年12月(15)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2017/11.html" rel="" target="">
+    2017年11月(1)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2017/10.html" rel="" target="">
+    2017年10月(3)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2017/09.html" rel="" target="">
+    2017年9月(5)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2017/08.html" rel="" target="">
+    2017年8月(8)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2017/07.html" rel="" target="">
+    2017年7月(5)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2017/06.html" rel="" target="">
+    2017年6月(4)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2017/05.html" rel="" target="">
+    2017年5月(5)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2017/04.html" rel="" target="">
+    2017年4月(3)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2017/03.html" rel="" target="">
+    2017年3月(9)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2017/02.html" rel="" target="">
+    2017年2月(16)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2017/01.html" rel="" target="">
+    2017年1月(2)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2016/12.html" rel="" target="">
+    2016年12月(6)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2016/11.html" rel="" target="">
+    2016年11月(13)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2016/10.html" rel="" target="">
+    2016年10月(5)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2016/09.html" rel="" target="">
+    2016年9月(9)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2016/08.html" rel="" target="">
+    2016年8月(1)
+</a>
+ 
+
+                        </li>
+                        <li>
+                            
+<a href="https://www.cnblogs.com/renhui/archive/2016/07.html" rel="" target="">
+    2016年7月(5)
+</a>
+ 
+
+                        </li>
+
+            </ul>
+
+
+        </div>
+
+</div>
+
+<!-- 最新评论 -->
+
+
+
+
+<!-- 阅读排行榜 -->
+<div id="sidebar_topviewedposts" class="sidebar-block">
+    <div class="catListView">
+<h3 class="catListTitle">阅读排行榜</h3>
+	<div id="TopViewPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/renhui/p/6066852.html">
+                            1. Java Thread 的使用(75532)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/renhui/p/5893593.html">
+                            2. Android WebView 总结 —— 使用HTML5播放视频及全屏方案(46634)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/renhui/p/7478527.html">
+                            3. Android 音视频开发(六)： MediaCodec API 详解(38021)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/renhui/p/6420140.html">
+                            4. 开源播放器 ijkplayer (一) ：使用Ijkplayer播放直播视频(36431)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/renhui/p/8575299.html">
+                            5. Android Foreground Service (前台服务)(28022)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div>
+
+
+</div>
+
+<!-- 评论排行榜 -->
+<div id="sidebar_topcommentedposts" class="sidebar-block">
+    <div class="catListFeedback">
+<h3 class="catListTitle">评论排行榜</h3>
+	<div id="TopFeedbackPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/renhui/p/5893593.html">
+                            1. Android WebView 总结 —— 使用HTML5播放视频及全屏方案(7)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/renhui/p/7520690.html">
+                            2. Android 音视频开发(七)： 音视频录制流程总结(6)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/renhui/p/6420140.html">
+                            3. 开源播放器 ijkplayer (一) ：使用Ijkplayer播放直播视频(5)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/renhui/p/7474096.html">
+                            4. Android 音视频开发(五)：使用 MediaExtractor 和 MediaMuxer API 解析和封装 mp4 文件(4)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/renhui/p/6855934.html">
+                            5. 项目自动构建工具对比(Maven、Gradle、Ant)(4)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div>
+
+
+</div>
+
+<!-- 推荐排行榜 -->
+<div id="sidebar_topdiggedposts" class="sidebar-block">
+    
+<div id="topdigg_posts_wrap">
+    <div class="catListView">
+        <h3 class="catListTitle">推荐排行榜</h3>
+        <div id="TopDiggPostsBlock">
+            <ul style="word-break: break-all">
+                        <li>
+                            <a href="https://www.cnblogs.com/renhui/p/6066750.html">
+                                1. Java Thread 的 run() 与 start() 的区别(6)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/renhui/p/6066852.html">
+                                2. Java Thread 的使用(6)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/renhui/p/9223969.html">
+                                3. FFmpeg命令行工具学习(三)：媒体文件转换工具ffmpeg(6)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/renhui/p/7472778.html">
+                                4. Android 音视频开发(四)：使用 Camera API 采集视频数据(5)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/renhui/p/7463287.html">
+                                5. Android 音视频开发(三)：使用 AudioTrack 播放PCM音频(5)
+                            </a>
+                        </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div></div>
+                    <script>loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		<!--done-->
+Copyright © 2019 灰色飘零
+<br><span id="poweredby">Powered by .NET Core 3.0.0 on Linux</span>
+
+
+
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+    
+
+
+</body></html>
